@@ -26,7 +26,7 @@
 
 
 
-    $.get("tl_2013_us_state.json", function(data) {
+    $.get("json/tl_2013_us_state.json", function(data) {
 
       var geojsonLayer = new L.GeoJson(data);
       map.addLayer(geojsonLayer);
