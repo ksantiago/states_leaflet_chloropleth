@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>States Leaflet Chloropleth Map</title>
+  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
+  <link rel="stylesheet" href="css/style.css">
+  <script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
+</head>
+
+<body>
+  <h1>States Leaflet Chloropleth Map</h1>
+
+  <div id="map"></div>
+
+  <script>
+
+
+    var map = L.map('map').setView([37.8, -96], 4);
+
+    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+    maxZoom: 18
+    }).addTo(map);
+
+    L.geoJson("states.json").addTo(map);
+    // $.get(statesData, function(data) {
+
+    //   var geojsonLayer = new L.GeoJson(data);
+    //   map.addLayer(geojsonLayer);
+    // });
+
+
+  </script>
+
+</body>
+
+</html>
