@@ -6,6 +6,7 @@
   <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
   <link rel="stylesheet" href="css/style.css">
   <script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
+  <script src="js/jquery-1.8.2.min.js"></script>
 </head>
 
 <body>
@@ -23,12 +24,13 @@
     maxZoom: 18
     }).addTo(map);
 
-    L.geoJson("states.json").addTo(map);
-    // $.get(statesData, function(data) {
 
-    //   var geojsonLayer = new L.GeoJson(data);
-    //   map.addLayer(geojsonLayer);
-    // });
+
+    $.get("tl_2013_us_state.json", function(data) {
+
+      var geojsonLayer = new L.GeoJson(data);
+      map.addLayer(geojsonLayer);
+    });
 
 
   </script>
