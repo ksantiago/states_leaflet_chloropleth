@@ -5,8 +5,9 @@
   <title>States Leaflet Chloropleth Map</title>
   <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
   <link rel="stylesheet" href="css/style.css">
-  <script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
   <script src="js/jquery-1.8.2.min.js"></script>
+  <script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
+  <script src="js/TileLayer.GeoJSON.js"></script>
 </head>
 
 <body>
@@ -14,23 +15,70 @@
 
   <div id="map"></div>
 
-  <script>
+  <script type="text/javascript">
 
+    // code from jkokenge
+    // var map = L.map('map').setView([37.8, -96], 4);
+    // L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+    // attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+    // maxZoom: 18
+    // }).addTo(map);
+    // $.get("json/tl_2013_us_state.json", function(data) {
+    //   var geojsonLayer = new L.GeoJson(data);
+    //   map.addLayer(geojsonLayer);
+    // });
 
-    var map = L.map('map').setView([37.8, -96], 4);
+    var map = new L.Map('map'),
+        cloudmadeUrl = 'http://{s}.tile.cloudmade.com/f5890b3490da42d6a607fba3577dd8d3/997/256/{z}/{x}/{y}.png',
+        cloudmadeAttribution = 'Map data &copy; 2011 OpenStreetMap contributors, Imagery &copy; 2011 CloudMade';
 
-    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-    maxZoom: 18
-    }).addTo(map);
+    map.setView(new L.LatLng(38.617, -100.261), 4);
 
+    var baseLayer = new L.TileLayer(cloudmadeUrl, { attribution: cloudmadeAttribution});
+    map.addLayer(baseLayer);
 
+    var style = {
+        "clickable": true,
+        "color": "#C0392B",
+        "fillColor": "#C0392B",
+        "weight": 1.0,
+        "opacity": 0.3,
+        "fillOpacity": 0.2
+    };
+    var hoverStyle = {
+        "fillOpacity": 0.5
+    };
 
-    $.get("json/tl_2013_us_state.json", function(data) {
-
-      var geojsonLayer = new L.GeoJson(data);
-      map.addLayer(geojsonLayer);
-    });
+    var geojsonURL = 'http://polymaps.appspot.com/state/{z}/{x}/{y}.json';
+    var geojsonTileLayer = new L.TileLayer.GeoJSON(geojsonURL, {
+            clipTiles: true,
+            unique: function (feature) {
+                return feature.id;
+            }
+        }, {
+            style: style,
+            onEachFeature: function (feature, layer) {
+                if (feature.properties) {
+                    var popupString = '<div class="popup">';
+                    for (var k in feature.properties) {
+                        var v = feature.properties[k];
+                        popupString += k + ': ' + v + '<br />';
+                    }
+                    popupString += '</div>';
+                    layer.bindPopup(popupString);
+                }
+                if (!(layer instanceof L.Point)) {
+                    layer.on('mouseover', function () {
+                        layer.setStyle(hoverStyle);
+                    });
+                    layer.on('mouseout', function () {
+                        layer.setStyle(style);
+                    });
+                }
+            }
+        }
+    );
+    map.addLayer(geojsonTileLayer);
 
 
   </script>
